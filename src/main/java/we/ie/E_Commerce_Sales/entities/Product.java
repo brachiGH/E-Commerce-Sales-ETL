@@ -1,12 +1,15 @@
 package we.ie.E_Commerce_Sales.entities;
 
-import jakarta.persistence.*;
+import java.util.List;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-
-import java.util.List;
 
 @Entity
 @Data
@@ -24,9 +27,9 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<Review> reviews;
 
-    @OneToMany(mappedBy = "category")
-    private List<Product_Category> Categories;
+    @OneToMany(mappedBy = "product")
+    private List<Product_Category> categories;
 
-    @OneToMany(mappedBy = "bill")
-    private List<Purchase> bills;
+    @OneToMany(mappedBy = "product")
+    private List<Purchase> purchases;
 }

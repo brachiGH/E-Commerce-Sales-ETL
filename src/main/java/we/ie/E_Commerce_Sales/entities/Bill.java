@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,9 +26,10 @@ public class Bill {
 
     private String _date;
 
+    @ManyToOne
+    @JoinColumn(name = "client_id")
     private Client client;
 
     @OneToMany(mappedBy = "bill")
     private List<Purchase> products;
-
 }
