@@ -17,11 +17,9 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NonNull
     private String name;
 
-    @NonNull
-    private Float price;
+    private double price;
 
     @OneToMany(mappedBy = "product")
     private List<Review> reviews;

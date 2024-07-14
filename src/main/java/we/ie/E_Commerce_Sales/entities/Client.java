@@ -1,17 +1,14 @@
 package we.ie.E_Commerce_Sales.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,5 +27,4 @@ public class Client {
 
     @OneToMany(mappedBy = "client")
     private List<Bill> Bills;
-
 }
