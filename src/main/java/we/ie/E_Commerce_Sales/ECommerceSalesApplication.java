@@ -17,6 +17,7 @@ import we.ie.E_Commerce_Sales.repositories.CategoryRepository;
 import we.ie.E_Commerce_Sales.repositories.ClientRepository;
 import we.ie.E_Commerce_Sales.repositories.ProductRepository;
 import we.ie.E_Commerce_Sales.repositories.ReviewRepository;
+import we.ie.E_Commerce_Sales.services.ClientService;
 
 @SpringBootApplication
 public class ECommerceSalesApplication {
@@ -67,10 +68,14 @@ public class ECommerceSalesApplication {
 				review.set_date(date);
 				reviewRepository.save(review);
 			});
-
-			clientRepository.findAll().forEach( clt -> {
-				System.out.println(clt.getName());
-			});
 		};
 	};
+
+
+	@Bean
+	CommandLineRunner commandLineRunner(ClientService clientService) {
+		return args -> {
+			clientService.consulter();
+		};
+	}
 }
