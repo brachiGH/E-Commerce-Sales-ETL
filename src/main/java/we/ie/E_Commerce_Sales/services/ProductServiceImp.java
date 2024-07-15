@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,35 +54,28 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public void changePrice(Long productId, double newprice) throws ProductNotFoundException {
-        Product product = productRepository.findById(productId).orElse(null);
-        if (product == null)
-            throw new ProductNotFoundException("Product not found");
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("Product not found"));
+
         product.setPrice(newprice);
     }
 
     @Override
     public List<Review> getReviews(Long productId) throws ProductNotFoundException {
-        Product product = productRepository.findById(productId).orElse(null);
-        if (product == null)
-            throw new ProductNotFoundException("Product not found");
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("Product not found"));
         
         return product.getReviews();
     }
 
     @Override
     public List<Purchase> purchaseHisory(Long productId) throws ProductNotFoundException {
-        Product product = productRepository.findById(productId).orElse(null);
-        if (product == null)
-            throw new ProductNotFoundException("Product not found");
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("Product not found"));
         
         return product.getPurchases();
     }
 
     @Override
     public List<Category> listCategories(Long productId) throws ProductNotFoundException {
-        Product product = productRepository.findById(productId).orElse(null);
-        if (product == null)
-            throw new ProductNotFoundException("Product not found");
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("Product not found"));
         
         List<Category> categories = new ArrayList<>();
         List<Product_Category> product_Categories = product.getCategories();
@@ -95,30 +87,27 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public void addCategory(Long productId, String categoryName) throws ProductNotFoundException, CategoryNotFoundException {
-        Product product = productRepository.findById(productId).orElse(null);
-        if (product == null)
-            throw new ProductNotFoundException("Product not found");
-        
-        Category category = categoryRepository.findById(categoryName).orElse(null);
-        if (category == null)
-            throw new CategoryNotFoundException("Category not found");
+    public Product_Category addCategory(Long productId, String categoryName) throws ProductNotFoundException, CategoryNotFoundException {
+        Product product = productRepository.findById(productId)
+                                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
+        Category category = categoryRepository.findById(categoryName)
+                                .orElseThrow(() -> new CategoryNotFoundException("Category not found"));
             
         Product_Category pc = new Product_Category();
 
         pc.setCategory(category);
         pc.setProduct(product);
+    
+        Product_Category __pc__ = product_CategoryRepository.save(pc);
+        return __pc__;
     }
 
     @Override
-    public void addReview(Long productId, Long clientId, Short rate) throws ProductNotFoundException, ClientNotFoundException {
-        Product product = productRepository.findById(productId).orElse(null);
-        if (product == null)
-            throw new ProductNotFoundException("Product not found");
-        
-        Client client = clientRepository.findById(clientId).orElse(null);
-        if (client == null)
-            throw new ClientNotFoundException("Client not found");
+    public Review addReview(Long productId, Long clientId, Short rate) throws ProductNotFoundException, ClientNotFoundException {
+        Product product = productRepository.findById(productId)
+                                    .orElseThrow(() -> new ProductNotFoundException("Product not found"));
+        Client client = clientRepository.findById(clientId)
+                                    .orElseThrow(() -> new ClientNotFoundException("Client not found"));
             
         Review review = new Review();
 
@@ -126,13 +115,14 @@ public class ProductServiceImp implements ProductService {
         review.set_date(new StdDateFormat().format(new Date()));
         review.setProduct(product);
         review.setClient(client);
+
+        Review review2 = reviewRepository.save(review);
+        return review2;
     }
 
     @Override
     public Double getPrice(Long productId) throws ProductNotFoundException {
-        Product product = productRepository.findById(productId).orElse(null);
-        if (product == null)
-            throw new ProductNotFoundException("Product not found");
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("Product not found"));
 
         return product.getPrice();
     }

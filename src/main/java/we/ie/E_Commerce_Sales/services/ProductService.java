@@ -4,6 +4,7 @@ import java.util.List;
 
 import we.ie.E_Commerce_Sales.entities.Category;
 import we.ie.E_Commerce_Sales.entities.Product;
+import we.ie.E_Commerce_Sales.entities.Product_Category;
 import we.ie.E_Commerce_Sales.entities.Purchase;
 import we.ie.E_Commerce_Sales.entities.Review;
 import we.ie.E_Commerce_Sales.exceptions.CategoryNotFoundException;
@@ -23,7 +24,7 @@ public interface ProductService {
 
     List<Category> listCategories(Long productId) throws ProductNotFoundException;
 
-    void addCategory(Long productId, String categoryName) throws ProductNotFoundException, CategoryNotFoundException;
+    Product_Category addCategory(Long productId, String categoryName) throws ProductNotFoundException, CategoryNotFoundException;
 
-    void addReview(Long productId, Long clientId, Short review) throws ProductNotFoundException, ClientNotFoundException;
+    Review addReview(Long productId, Long clientId, Short review) throws ProductNotFoundException, ClientNotFoundException;
 }
