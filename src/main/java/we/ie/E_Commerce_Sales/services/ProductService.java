@@ -2,6 +2,7 @@ package we.ie.E_Commerce_Sales.services;
 
 import java.util.List;
 
+import we.ie.E_Commerce_Sales.dtos.ProductDTO;
 import we.ie.E_Commerce_Sales.entities.Category;
 import we.ie.E_Commerce_Sales.entities.Product;
 import we.ie.E_Commerce_Sales.entities.Product_Category;
@@ -12,7 +13,9 @@ import we.ie.E_Commerce_Sales.exceptions.ClientNotFoundException;
 import we.ie.E_Commerce_Sales.exceptions.ProductNotFoundException;
 
 public interface ProductService {
-    Product addProduct(String productName, Double productPrice);
+    ProductDTO addProduct(ProductDTO productDTO);
+
+    List<ProductDTO> listProducts();
 
     Double getPrice(Long productId) throws ProductNotFoundException;
 

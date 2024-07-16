@@ -3,6 +3,7 @@ package we.ie.E_Commerce_Sales.services;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +12,7 @@ import com.fasterxml.jackson.databind.util.StdDateFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import we.ie.E_Commerce_Sales.dtos.ProductDTO;
 import we.ie.E_Commerce_Sales.entities.Category;
 import we.ie.E_Commerce_Sales.entities.Client;
 import we.ie.E_Commerce_Sales.entities.Product;
@@ -20,6 +22,7 @@ import we.ie.E_Commerce_Sales.entities.Review;
 import we.ie.E_Commerce_Sales.exceptions.CategoryNotFoundException;
 import we.ie.E_Commerce_Sales.exceptions.ClientNotFoundException;
 import we.ie.E_Commerce_Sales.exceptions.ProductNotFoundException;
+import we.ie.E_Commerce_Sales.mappers.ProductMappingImp;
 import we.ie.E_Commerce_Sales.repositories.CategoryRepository;
 import we.ie.E_Commerce_Sales.repositories.ClientRepository;
 import we.ie.E_Commerce_Sales.repositories.ProductRepository;
@@ -36,20 +39,19 @@ public class ProductServiceImp implements ProductService {
     private ClientRepository clientRepository;
     private ReviewRepository reviewRepository;
     private Product_CategoryRepository product_CategoryRepository;
+    private ProductMappingImp dtoMapper;
 
 
     // Logger log = (Logger) LoggerFactory.getLogger(this.getClass().getName());  === @slf4j
 
     @Override
-    public Product addProduct(String productName, Double productPrice) {
+    public ProductDTO addProduct(ProductDTO productDTO) {
         log.info("New Product");
 
-        Product product = new Product();
-        product.setName(productName);
-        product.setPrice(productPrice);
+        Product product = dtoMapper.fromProductDTO(productDTO);
 
         Product savedProduct = productRepository.save(product);
-        return savedProduct;
+        return dtoMapper.fromProduct(savedProduct);
     }
 
     @Override
@@ -125,6 +127,16 @@ public class ProductServiceImp implements ProductService {
         Product product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("Product not found"));
 
         return product.getPrice();
+    }
+
+    @Override
+    public List<ProductDTO> listProducts() {
+        List<Product> products = productRepository.findAll();
+        List<ProductDTO> ProductDTOS = products.stream()
+                .map(product -> dtoMapper.fromProduct(product))
+                .collect(Collectors.toList());
+
+        return ProductDTOS;
     }
 
 }

@@ -1,18 +1,30 @@
+# Definition
+E-Commerce backend
+
 # run
 
-Downlaod  (maven)[https://maven.apache.org/download.cgi] and add it to PATH variables
-And set JAVA_HOME environment variable is not set. (for java 17)
+Using docker Compose
+
+```console
+docker-compose up -d
+```
+
+**OR**
+
+Downlaod  [maven](https://maven.apache.org/download.cgi) and add it to PATH variables
+
+And set JAVA_HOME environment variable if it is not set. (for java 17)
 
 ```console
 mvn -N io.takari:maven:wrapper
-./mvnw clean install
 ./mvnw spring-boot:run --quiet
 ```
 
 
-### java environment
+### Set Java environment
 
 Here’s how to set the JAVA_HOME environment variable on different operating systems:
+
 **For Windows**
 
 1.Find your Java installation directory:
@@ -43,7 +55,9 @@ Here’s how to set the JAVA_HOME environment variable on different operating sy
 
 You can find it by running the command:
 
-        /usr/libexec/java_home
+```console
+/usr/libexec/java_home
+```
 
 2.Set the JAVA_HOME variable:
 
@@ -51,17 +65,21 @@ Open a terminal.
 
 Edit your shell profile file (.bash_profile, .zshrc, or .profile), for example:
 
-        nano ~/.zshrc
+```console
+nano ~/.zshrc
+```
 
 Add the following line:
 
-
-        export JAVA_HOME=$(/usr/libexec/java_home)
+```console
+export JAVA_HOME=$(/usr/libexec/java_home)
+```
 
 Save the file and apply the changes by running:
 
-
-    source ~/.zshrc
+```console
+source ~/.zshrc
+```
 
 **For Linux**
 
@@ -76,20 +94,20 @@ Open a terminal.
 Edit your shell profile file (.bashrc, .bash_profile, or .profile), for example:
 
 
-```
+```console
 nano ~/.bashrc
 ```
 
 Add the following line:
 
-```
+```console
 export JAVA_HOME=/path/to/jdk-17
 export PATH=$JAVA_HOME/bin:$PATH
 ```
 
 Save the file and apply the changes by running:
 
-```
+```console
 source ~/.bashrc
 ```
 
@@ -98,11 +116,8 @@ source ~/.bashrc
 After setting the JAVA_HOME variable, verify that it’s correctly set by running:
 
 
-
-echo $JAVA_HOME
+        echo $JAVA_HOME
 
 For Windows, run in Command Prompt or PowerShell:
 
-
-
-echo %JAVA_HOME%
+        echo %JAVA_HOME%
