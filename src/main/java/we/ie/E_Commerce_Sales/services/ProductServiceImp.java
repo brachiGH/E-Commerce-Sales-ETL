@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.util.StdDateFormat;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import we.ie.E_Commerce_Sales.dtos.ProductDTO;
+import we.ie.E_Commerce_Sales.dtos.ReviewDTO;
 import we.ie.E_Commerce_Sales.entities.Category;
 import we.ie.E_Commerce_Sales.entities.Client;
 import we.ie.E_Commerce_Sales.entities.Product;
@@ -23,6 +24,7 @@ import we.ie.E_Commerce_Sales.exceptions.CategoryNotFoundException;
 import we.ie.E_Commerce_Sales.exceptions.ClientNotFoundException;
 import we.ie.E_Commerce_Sales.exceptions.ProductNotFoundException;
 import we.ie.E_Commerce_Sales.mappers.ProductMappingImp;
+import we.ie.E_Commerce_Sales.mappers.ReviewMappingImp;
 import we.ie.E_Commerce_Sales.repositories.CategoryRepository;
 import we.ie.E_Commerce_Sales.repositories.ClientRepository;
 import we.ie.E_Commerce_Sales.repositories.ProductRepository;
@@ -39,7 +41,8 @@ public class ProductServiceImp implements ProductService {
     private ClientRepository clientRepository;
     private ReviewRepository reviewRepository;
     private Product_CategoryRepository product_CategoryRepository;
-    private ProductMappingImp dtoMapper;
+    private ProductMappingImp productdtoMapper;
+    private ReviewMappingImp reviewdtoMapper;
 
 
     // Logger log = (Logger) LoggerFactory.getLogger(this.getClass().getName());  === @slf4j
@@ -48,10 +51,10 @@ public class ProductServiceImp implements ProductService {
     public ProductDTO addProduct(ProductDTO productDTO) {
         log.info("New Product");
 
-        Product product = dtoMapper.fromProductDTO(productDTO);
+        Product product = productdtoMapper.fromProductDTO(productDTO);
 
         Product savedProduct = productRepository.save(product);
-        return dtoMapper.fromProduct(savedProduct);
+        return productdtoMapper.fromProduct(savedProduct);
     }
 
     @Override
@@ -62,10 +65,14 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public List<Review> getReviews(Long productId) throws ProductNotFoundException {
+    public List<ReviewDTO> getReviews(Long productId) throws ProductNotFoundException {
         Product product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("Product not found"));
+        List<ReviewDTO> reviewsDTOS = product.getReviews().stream()
+                .map(review -> reviewdtoMapper.fromReview(review))
+                .collect(Collectors.toList());
         
-        return product.getReviews();
+
+        return reviewsDTOS;
     }
 
     @Override
@@ -105,7 +112,7 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public Review addReview(Long productId, Long clientId, Short rate) throws ProductNotFoundException, ClientNotFoundException {
+    public ReviewDTO addReview(Long productId, Long clientId, Short rate) throws ProductNotFoundException, ClientNotFoundException {
         Product product = productRepository.findById(productId)
                                     .orElseThrow(() -> new ProductNotFoundException("Product not found"));
         Client client = clientRepository.findById(clientId)
@@ -118,8 +125,8 @@ public class ProductServiceImp implements ProductService {
         review.setProduct(product);
         review.setClient(client);
 
-        Review review2 = reviewRepository.save(review);
-        return review2;
+        Review savedReview = reviewRepository.save(review);
+        return reviewdtoMapper.fromReview(savedReview);
     }
 
     @Override
@@ -133,7 +140,7 @@ public class ProductServiceImp implements ProductService {
     public List<ProductDTO> listProducts() {
         List<Product> products = productRepository.findAll();
         List<ProductDTO> ProductDTOS = products.stream()
-                .map(product -> dtoMapper.fromProduct(product))
+                .map(product -> productdtoMapper.fromProduct(product))
                 .collect(Collectors.toList());
 
         return ProductDTOS;
