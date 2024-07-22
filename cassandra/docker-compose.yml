@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  cassandra:
+    image: cassandra:latest
+    container_name: cassandra
+    ports:
+      - "9042:9042"  # Cassandra port for CQL
+      - "7000:7000"  # Cassandra inter-node communication port
+      - "7001:7001"  # Cassandra SSL port for inter-node communication
+      - "7199:7199"  # Cassandra JMX port
+    environment:
+      - CASSANDRA_CLUSTER_NAME=MyCassandraCluster
+      - CASSANDRA_LISTENER_INTERFACE=eth0
+      - CASSANDRA_RPC_ADDRESS=0.0.0.0
+      - CASSANDRA_BROADCAST_ADDRESS=cassandra
+    networks:
+      - cassandra-network
+
+networks:
+  cassandra-network:
+    driver: bridge
